@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Flask website </title>
+</head>
+<body>
+
+</body>
+</html>
+
+<form action="{{ url_for('add_to_cart' )}}" method="post">
+    <fileldset>
+        <legend for="flower">Select a flower:</legend>
+        <select name="flower" id="flower">
+            {% for flower in flowers %}
+                <option value="{{ flower }}">{{ flower }}</option>
+            {% endfor %}
+            </select>
+            <lebel for="quantity">Quantity:</lebel>
+            <input type="number" namw="quantity" value="1" min="1">
+            <input type="submit">Add to cart</button> 
+    </fileldset>
+      <p>Cart: {{ cart }}</p>
+      <p> Total: {{total}}</p> -
+</form>
