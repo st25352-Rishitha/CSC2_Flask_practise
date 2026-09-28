@@ -1,6 +1,7 @@
 {
-    "Sunflower": {"price": 10, "stock": 20},
-    "lilly": {"price": 10, "stock": 30},
-    "Tulip": {"price": 10, "stock": 40},
-    "Rose": {"price": 10, "stock": 50}
+    "card": {"price": 10, "stock": 20},
+    "ribbon": {"price": 7, "stock": 30},
+    "chocolate": {"price": 8, "stock": 40},
+    "message": {"price": 9, "stock": 50}
 }
+

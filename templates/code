@@ -1,0 +1,15 @@
+    {% comment %} <form action="{{ url_for('add_to_cart' )}}" method="post">
+        <fileldset>
+            <legend for="flower">Select a flower:</legend>
+            <select name="flower" id="flower">
+                {% for flower, details in flowers %}
+                    <option value="{{ flower }}">{{ flower }}</option>
+                {% endfor %}
+                </select>
+                <lebel for="quantity">Quantity:</lebel>
+                <input type="number" namw="quantity" value="1" min="1">
+                <input type="submit">Add to cart</button> 
+        </fileldset>
+        <p>Cart: {{ cart }}</p>
+        <p> Total: {{total}}</p> -
+    </form> {% endcomment %}

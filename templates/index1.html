@@ -6,22 +6,18 @@
     <title> Flask website </title>
 </head>
 <body>
+    <h2>Displaying JSON flower data</h2>
+    <ul> 
+        {% for flower, details in flowers.items() %}
+        <li> {{ flower }} - ${{ details['price'] }} (stock: {{ details['stock'] }})</li>
+        {% endfor %}
+    </ul>
+<h2>Add-ons available:</h2>
+<ul> 
+    {% for addon, details in addons.items()%}
+    <li>{{ addon }} - (${{ details['price'] }})</li> 
+    {%endfor%}
+</ul> 
 
 </body>
 </html>
-
-<form action="{{ url_for('add_to_cart' )}}" method="post">
-    <fileldset>
-        <legend for="flower">Select a flower:</legend>
-        <select name="flower" id="flower">
-            {% for flower in flowers %}
-                <option value="{{ flower }}">{{ flower }}</option>
-            {% endfor %}
-            </select>
-            <lebel for="quantity">Quantity:</lebel>
-            <input type="number" namw="quantity" value="1" min="1">
-            <input type="submit">Add to cart</button> 
-    </fileldset>
-      <p>Cart: {{ cart }}</p>
-      <p> Total: {{total}}</p> -
-</form>

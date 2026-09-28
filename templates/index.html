@@ -1,10 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title> Flask website </title>
-</head>
-<body>
-    <h1>Web page successfully displays</h1>
-</body>
-</html>
+{% extends "base.html"%}
+
+{% block title %}Home - flower shop{% endblock %}
+
+{% block content %}
+   <body>
+    <form action="{{ url_for('add_to_cart' )}}" method="post">
+        <fieldshet>
+            <legend for="flower">Select Flower</legend>
+            <select name="flower" id="flower">
+                {% for flower, details in flowers.items() %}
+                <option value="{{ flower }}">{{ flower }} - ${{ details['price'] }}</option>
+                {% endfor %}
+            </select>
+            <label for="quantity">Quantity:</label>
+            <input type="number" name="quantity" value="1" min="1">
+            <button type="submit">Add to cart</button>
+        </fieldshet>
+    </form>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <h2>Your Cart</h2>
+    {% if cart %}
+        <ul> 
+            {% for item, details in cart.items() %}
+                <li>{{ item}}: {{ '%.2f' % details['quantity'] }} x ${{ details['price']}}
+                    = ${{ details['quantity'] * details['price']}}
+                    <a href="{{ url_for('remove_from_cart', item=item) }}">[remove]</a>
+                </li>
+                {% endfor %}
+            </ul>
+        {% endblock %}
+
+
+<form action="{{ url_for('select_addon') }}" method="post">
+    <fieldset>
+        <legend>Add-ons</legend>
+        {% for addon, data in addons. items() %}
+        <label>
+            <input type="checkbox" name="addons" value="{{ addon}}">
+            {{ addon}} (${{ data.price }})]
+        </label><br>
+    {%endfor %}
+    </fieldset>
+</form> 
+
+@app.route('/select_addon', methods=['POST'])
+def select_addon():
+    selected_addons = {}
+    _, addons = load_data()  # we only need addons
+
+    selected_keys = rquest.form.getlist('addons')
+
+    for addon in selected_keys:
+        if addon in addons:
+        selected_addons[addon] = float(addons[addon]['price'])
+
+    session['selected_addons'] = selected_addons
+    session.modified = True
+    return redirect9url_for('home')
+
+
+@app.route("/")
+def home():
+    cart = session.get('cart', {})
+    selected_addons = session.get('selected_addons', {})
+    flowers, addons = load_data()
+    total = calculate_total(cart)
+    return render_template("index.html", flowers=flowers, addons=addons, cart=cart, total=total, selected_addons=selected_addons)
+
+{% else %}
+    <p>Your cart is empty.</p>
+{% endif %}
+{ % if selected_addons %}
+    <h3>Selected Add-ons</h3>
+    <ul>
+        {% for addon, price in selected_addons.items() %}
+            <li>{{ addon }} - ${{ price }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<h4>Total: ${{ '%.2f' % total }}

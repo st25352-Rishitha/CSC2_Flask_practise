@@ -1,0 +1,52 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Flask website </title>
+</head>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form action="{{ url_for('add_to_cart')}}" method="post">
+        <fieldset>
+            <legend for="flower">Select a flower:</legend>
+                <select name="flower" id="flower">
+                {% for flower in flowers %}
+                    <option value="{{ flower }}">{{ flower }}</option>
+                {% endfor %}
+                </select>
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="quantity" value="1" min="1">
+                <button type="submit">Add to cart</button>
+            </fieldset>
+        <p>Cart: {{ cart }}</p>
+        <p> Total: {{total}}</p> -
+        <button type="submit">Add to cart</button>
+    </form> 
+    <h2> Your cart</h2>
+    {% if cart %}
+    <ul> 
+        {% for item, details in cart.items() %}
+            <li>{{ item }}: {{'%.2f' % details['quantity'] }} x
+                                       ${{ details['price'] }}
+                = ${{ details['quantity'] * details['price'] }}
+            </li>
+
+            <h4>Total: ${{ '%.2f' % total }}</h4>
+        {% endfor %}
+    </ul>
+    {% else %}
+     <p>Your cart is empty</P>
+    {% endif %}
+
+     
+    
+
+
+                             
+
