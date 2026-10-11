@@ -5,16 +5,23 @@ app = Flask(__name__)
 app.secret_key = "osc2026"
 
 
-@app.route('/')
-def index():
-    flowers = load_data()
-    return render_template('index.html', flowers=flowers)
+@app.route("/")
+def home():
+    cart = session.get('cart', {})
+    selected_addons = session.get('selected_addons', {})
+    flowers, addons = load_data()
+    total = calculate_total(cart)
+    return render_template("index.html", flowers=flowers, addons=addons, cart=cart, total=total, selected_addons=selected_addons)
 
 
 def load_data():
     with open('data/flowers.json') as file:
         flowers = json.load(file)
-    return flowers
+        
+    with open('data/addons.json') as file:
+        addons = json.load(file)
+
+    return flowers, addons
 
 
 @app.route('/add', methods=['POST'])
@@ -56,22 +63,27 @@ def remove_from_cart(item):
         flash("Item not found in cart.")
         return redirect(url_for('index'))
     
-    def calculate_total(cart):
-        total = sum(item['price'] * item['quantity'] for item in cart.values())
-        return total
+def calculate_total(cart):
+    total = sum(item['price'] * item['quantity'] for item in cart.values())
+    return total
     
-    
-    @app.route("/")
-    def home():
-        cart = session.get('cart', {})
-        flowers, addons = load_data()
-        
-        total = calculate_total(cart)
-        return render_template("index.html", flowers=flowers, addons=addons, cart=cart, total=total)
 
-session['cart'] = {
-    "Rose": {"price": 10, "quantity": 1}
-}
+@app.route('/select_addon', methods=['POST'])
+def select_addon():
+    selected_addons = {}
+    _, addons = load_data()  # we only need addons
+
+    selected_keys = request.form.getlist('addons')
+
+    for addon in selected_keys:
+        if addon in addons:
+            selected_addons[addon] = float(addons[addon]['price'])
+
+    session['selected_addons'] = selected_addons
+    session.modified = True
+    return redirect(url_for('home'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -36,49 +36,25 @@
                 </li>
                 {% endfor %}
             </ul>
-        {% endblock %}
 
 
-<form action="{{ url_for('select_addon') }}" method="post">
-    <fieldset>
-        <legend>Add-ons</legend>
-        {% for addon, data in addons. items() %}
-        <label>
-            <input type="checkbox" name="addons" value="{{ addon}}">
-            {{ addon}} (${{ data.price }})]
-        </label><br>
-    {%endfor %}
-    </fieldset>
-</form> 
+        <form action="{{ url_for('select_addon') }}" method="post">
+            <fieldset>
+                <legend>Add-ons</legend>
+                {% for addon, data in addons. items() %}
+                <label>
+                    <input type="checkbox" name="addons" value="{{ addon}}">
+                    {{ addon}} (${{ data.price }})]
+                </label><br>
+            {%endfor %}
+            </fieldset>
+        </form> 
 
-@app.route('/select_addon', methods=['POST'])
-def select_addon():
-    selected_addons = {}
-    _, addons = load_data()  # we only need addons
-
-    selected_keys = rquest.form.getlist('addons')
-
-    for addon in selected_keys:
-        if addon in addons:
-        selected_addons[addon] = float(addons[addon]['price'])
-
-    session['selected_addons'] = selected_addons
-    session.modified = True
-    return redirect9url_for('home')
-
-
-@app.route("/")
-def home():
-    cart = session.get('cart', {})
-    selected_addons = session.get('selected_addons', {})
-    flowers, addons = load_data()
-    total = calculate_total(cart)
-    return render_template("index.html", flowers=flowers, addons=addons, cart=cart, total=total, selected_addons=selected_addons)
 
 {% else %}
     <p>Your cart is empty.</p>
 {% endif %}
-{ % if selected_addons %}
+{% if selected_addons %}
     <h3>Selected Add-ons</h3>
     <ul>
         {% for addon, price in selected_addons.items() %}
@@ -87,3 +63,5 @@ def home():
     </ul>
 {% endif %}
 <h4>Total: ${{ '%.2f' % total }}
+
+{% endblock %}
